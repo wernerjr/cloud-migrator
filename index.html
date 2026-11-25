@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cloud Migrator</title>
+    <link rel="icon" href="assets/icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-hard-drive" viewBox="0 0 24 24">
+        <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" />
+        <line x1="2" x2="22" y1="12" y2="12" />
+        <line x1="6" x2="6.01" y1="16" y2="16" />
+        <line x1="10" x2="10.01" y1="16" y2="16" />
+      </symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24">
+        <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+      </symbol>
+      <symbol id="i-server" viewBox="0 0 24 24">
+        <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+        <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+        <line x1="6" x2="6.01" y1="6" y2="6" />
+        <line x1="6" x2="6.01" y1="18" y2="18" />
+      </symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24">
+        <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+      </symbol>
+      <symbol id="i-file" viewBox="0 0 24 24">
+        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+        <path d="M21 3v5h-5" />
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+        <path d="M8 16H3v5" />
+      </symbol>
+      <symbol id="i-help" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <path d="M12 17h.01" />
+      </symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+        <path d="M12 9v4" />
+        <path d="M12 17h.01" />
+      </symbol>
+      <symbol id="i-chevron-down" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="i-chevron-up" viewBox="0 0 24 24">
+        <path d="m18 15-6-6-6 6" />
+      </symbol>
+      <symbol id="i-chevron-right" viewBox="0 0 24 24">
+        <path d="m9 18 6-6-6-6" />
+      </symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="m12 5 7 7-7 7" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M20 6 9 17l-5-5" />
+      </symbol>
+      <symbol id="i-external" viewBox="0 0 24 24">
+        <path d="M15 3h6v6" />
+        <path d="M10 14 21 3" />
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      </symbol>
+    </svg>
+
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 8.5h13l-3.5-3.5" />
+            <path class="brand-accent" d="M20 15.5H7l3.5 3.5" />
+          </svg>
+          <div class="brand-text">
+            <h1>Cloud Migrator</h1>
+            <p>Google Drive ↔ OneDrive</p>
+          </div>
+        </div>
+        <div class="topbar-tools">
+          <button
+            id="mode-button"
+            class="mode-button"
+            type="button"
+            aria-label="Configurar onde as transferências rodam"
+            title="Onde as transferências rodam"
+          >
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-server"></use></svg>
+            <span id="mode-label" class="mode-label">Neste computador</span>
+            <span id="mode-dot" class="mode-dot" aria-hidden="true" hidden></span>
+          </button>
+          <span id="rclone-version" class="meta"></span>
+          <button id="help-open" class="icon-btn" type="button" aria-label="Ajuda" title="Ajuda">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-help"></use></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="app-main">
+        <div id="notice-banner" class="banner" hidden>
+          <svg class="icon banner-icon" aria-hidden="true" focusable="false"><use href="#i-alert"></use></svg>
+          <div class="banner-copy">
+            <p id="notice-title" class="banner-title"></p>
+            <p id="notice-text" class="banner-text"></p>
+          </div>
+          <div id="notice-actions" class="banner-actions"></div>
+        </div>
+
+        <div class="actionbar">
+          <p id="selection-summary" class="selection-summary">Selecione itens em um dos lados</p>
+          <div class="actionbar-actions">
+            <span id="route" class="route" hidden></span>
+            <button id="move-button" class="btn btn-primary" type="button" disabled>Mover selecionados</button>
+          </div>
+        </div>
+
+        <main class="workspace">
+          <section class="pane" id="pane-drive" aria-labelledby="drive-title">
+            <header class="pane-head">
+              <div class="provider">
+                <svg class="icon provider-icon" aria-hidden="true" focusable="false"><use href="#i-hard-drive"></use></svg>
+                <div class="provider-text">
+                  <h2 id="drive-title">Google Drive</h2>
+                  <div class="account-row" id="account-row-drive" hidden>
+                    <div class="select-wrap">
+                      <select id="remote-drive" class="account-select" aria-label="Conta do Google Drive"></select>
+                      <svg class="icon select-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron-down"></use></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pane-tools">
+                <button
+                  id="add-drive"
+                  class="icon-btn"
+                  type="button"
+                  aria-label="Conectar outra conta do Google Drive"
+                  title="Conectar outra conta"
+                  hidden
+                >
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                </button>
+                <button
+                  id="refresh-drive"
+                  class="icon-btn"
+                  type="button"
+                  aria-label="Atualizar Google Drive"
+                  title="Atualizar"
+                  hidden
+                >
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-refresh"></use></svg>
+                </button>
+              </div>
+            </header>
+            <div class="breadcrumb-row" id="breadcrumbs-drive" hidden>
+              <button
+                id="up-drive"
+                class="icon-btn"
+                type="button"
+                aria-label="Abrir a pasta acima no Google Drive"
+                title="Pasta acima"
+              >
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-up"></use></svg>
+              </button>
+              <nav id="crumbs-drive" class="crumbs" aria-label="Pasta no Google Drive"></nav>
+            </div>
+            <div class="pane-body" id="body-drive"></div>
+            <footer class="pane-foot" id="foot-drive" hidden></footer>
+          </section>
+
+          <section class="pane" id="pane-onedrive" aria-labelledby="onedrive-title">
+            <header class="pane-head">
+              <div class="provider">
+                <svg class="icon provider-icon" aria-hidden="true" focusable="false"><use href="#i-cloud"></use></svg>
+                <div class="provider-text">
+                  <h2 id="onedrive-title">OneDrive</h2>
+                  <div class="account-row" id="account-row-onedrive" hidden>
+                    <div class="select-wrap">
+                      <select id="remote-onedrive" class="account-select" aria-label="Conta do OneDrive"></select>
+                      <svg class="icon select-chevron" aria-hidden="true" focusable="false"><use href="#i-chevron-down"></use></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pane-tools">
+                <button
+                  id="add-onedrive"
+                  class="icon-btn"
+                  type="button"
+                  aria-label="Conectar outra conta do OneDrive"
+                  title="Conectar outra conta"
+                  hidden
+                >
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                </button>
+                <button
+                  id="refresh-onedrive"
+                  class="icon-btn"
+                  type="button"
+                  aria-label="Atualizar OneDrive"
+                  title="Atualizar"
+                  hidden
+                >
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-refresh"></use></svg>
+                </button>
+              </div>
+            </header>
+            <div class="breadcrumb-row" id="breadcrumbs-onedrive" hidden>
+              <button
+                id="up-onedrive"
+                class="icon-btn"
+                type="button"
+                aria-label="Abrir a pasta acima no OneDrive"
+                title="Pasta acima"
+              >
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron-up"></use></svg>
+              </button>
+              <nav id="crumbs-onedrive" class="crumbs" aria-label="Pasta no OneDrive"></nav>
+            </div>
+            <div class="pane-body" id="body-onedrive"></div>
+            <footer class="pane-foot" id="foot-onedrive" hidden></footer>
+          </section>
+        </main>
+
+        <section class="dock" id="transfer-dock" aria-labelledby="dock-title" hidden>
+          <div class="dock-row">
+            <div class="dock-heading">
+              <span id="dock-icon" class="dock-icon" aria-hidden="true"></span>
+              <div class="dock-title-group">
+                <p id="dock-title" class="dock-title">Preparando transferência</p>
+                <p id="dock-sub" class="dock-sub"></p>
+              </div>
+            </div>
+            <div class="dock-stats">
+              <span id="dock-bytes" class="dock-stat" hidden></span>
+              <span id="dock-speed" class="dock-stat" hidden></span>
+              <span id="dock-eta" class="dock-stat" hidden></span>
+              <button id="dock-action" class="btn btn-secondary btn-small" type="button">Cancelar</button>
+            </div>
+          </div>
+          <progress id="dock-progress" class="progress" max="100" value="0" aria-label="Progresso da transferência"></progress>
+          <p id="dock-note" class="dock-note" hidden></p>
+          <details id="dock-details" class="dock-details" hidden>
+            <summary>Detalhes do erro</summary>
+            <pre id="dock-error"></pre>
+          </details>
+        </section>
+      </div>
+    </div>
+
+    <p id="live-status" class="sr-only" aria-live="polite"></p>
+
+    <dialog id="confirm-dialog" class="dialog" aria-labelledby="confirm-title">
+      <div class="dialog-head">
+        <h2 id="confirm-title">Mover itens?</h2>
+        <button class="icon-btn dialog-close" type="button" data-close="confirm-dialog" aria-label="Fechar">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <div class="confirm-route">
+          <div class="confirm-side">
+            <span class="meta-label">De</span>
+            <p id="confirm-from" class="confirm-provider"></p>
+            <p id="confirm-from-path" class="path"></p>
+          </div>
+          <svg class="icon confirm-arrow" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg>
+          <div class="confirm-side">
+            <span class="meta-label">Para</span>
+            <p id="confirm-to" class="confirm-provider"></p>
+            <p id="confirm-to-path" class="path"></p>
+          </div>
+        </div>
+        <ul id="confirm-items" class="item-list" aria-label="Itens selecionados"></ul>
+        <p id="confirm-more" class="item-more" hidden></p>
+        <p id="confirm-runtime" class="dialog-runtime"></p>
+        <p class="dialog-note">
+          Os itens saem da origem depois da cópia. Arquivos com o mesmo nome no destino são substituídos; pastas iguais
+          são mescladas. A versão anterior de cada arquivo substituído fica em
+          <code>_cloud-migrator-backups/&lt;data&gt;</code> no destino.
+        </p>
+      </div>
+      <div class="dialog-foot">
+        <button id="confirm-cancel" class="btn btn-secondary" type="button">Cancelar</button>
+        <button id="confirm-start" class="btn btn-primary" type="button">Mover</button>
+      </div>
+    </dialog>
+
+    <dialog id="google-dialog" class="dialog" aria-labelledby="google-title">
+      <div class="dialog-head">
+        <h2 id="google-title">Conectar Google Drive</h2>
+        <button class="icon-btn dialog-close" type="button" data-close="google-dialog" aria-label="Fechar">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <form id="google-form" novalidate>
+        <div class="dialog-body">
+          <p class="dialog-lede">
+            O Google exige um cliente OAuth próprio para apps de terceiros. A criação é gratuita e feita no seu Google
+            Cloud.
+          </p>
+          <ol class="steps">
+            <li>Crie um cliente OAuth do tipo <strong>App para computador</strong>.</li>
+            <li>Ative a Google Drive API e adicione seu e-mail como testador na tela de consentimento.</li>
+            <li>Cole o Client ID e o Client secret abaixo.</li>
+          </ol>
+          <button id="google-guide" class="link-button" type="button">
+            Abrir o passo a passo do rclone (em inglês)
+            <svg class="icon icon-inline" aria-hidden="true" focusable="false"><use href="#i-external"></use></svg>
+          </button>
+          <div class="field">
+            <label for="google-client-id">Client ID</label>
+            <input
+              id="google-client-id"
+              name="clientId"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Cole o Client ID do Google Cloud"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="google-client-secret">Client secret</label>
+            <input
+              id="google-client-secret"
+              name="clientSecret"
+              type="password"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+          </div>
+          <p id="google-error" class="field-error" role="alert" hidden></p>
+          <p class="field-hint">As credenciais ficam só nesta máquina, na configuração local do rclone.</p>
+        </div>
+        <div class="dialog-foot">
+          <button id="google-cancel" class="btn btn-secondary" type="button">Cancelar</button>
+          <button class="btn btn-primary" type="submit">Abrir navegador</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
+      <div class="dialog-head">
+        <h2 id="settings-title">Onde as transferências rodam</h2>
+        <button class="icon-btn dialog-close" type="button" data-close="settings-dialog" aria-label="Fechar">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <form id="settings-form" novalidate>
+        <div class="dialog-body">
+          <fieldset class="mode-group">
+            <legend class="sr-only">Onde as transferências rodam</legend>
+            <label class="mode-option">
+              <input type="radio" name="runtime" value="local" />
+              <span class="mode-option-text">
+                <span class="mode-option-title">Neste computador</span>
+                <span class="mode-option-desc">Usa o rclone e as contas locais.</span>
+              </span>
+            </label>
+            <label class="mode-option">
+              <input type="radio" name="runtime" value="server" />
+              <span class="mode-option-text">
+                <span class="mode-option-title">No servidor</span>
+                <span class="mode-option-desc">Usa a conexão e o rclone do servidor.</span>
+              </span>
+            </label>
+          </fieldset>
+
+          <div id="server-fields" class="server-fields" hidden>
+            <div class="field">
+              <label for="server-url">URL do servidor</label>
+              <input
+                id="server-url"
+                type="url"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="http://homelab:8787"
+              />
+            </div>
+            <div class="field">
+              <label for="server-token">Token de acesso</label>
+              <input id="server-token" type="password" autocomplete="off" spellcheck="false" />
+              <p id="server-token-hint" class="field-hint"></p>
+            </div>
+            <div class="server-test-row">
+              <button id="settings-test" class="btn btn-secondary btn-small" type="button">Testar conexão</button>
+              <p id="settings-test-result" class="test-result" aria-live="polite" hidden></p>
+            </div>
+            <p class="field-hint">
+              O login das contas também acontece pelo servidor; o navegador abre nesta máquina. Use LAN/VPN ou um
+              reverse proxy com HTTPS.
+            </p>
+          </div>
+
+          <p id="settings-error" class="field-error" role="alert" hidden></p>
+        </div>
+        <div class="dialog-foot">
+          <button id="settings-cancel" class="btn btn-secondary" type="button">Cancelar</button>
+          <button id="settings-save" class="btn btn-primary" type="submit">Salvar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="help-dialog" class="dialog dialog-wide" aria-labelledby="help-title">
+      <div class="dialog-head">
+        <h2 id="help-title">Como funciona</h2>
+        <button class="icon-btn dialog-close" type="button" data-close="help-dialog" aria-label="Fechar">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <div class="dialog-body help-body">
+        <p class="dialog-lede">As transferências acontecem nesta máquina, pelo rclone.</p>
+        <section>
+          <h3>Transferências</h3>
+          <ul>
+            <li>A origem só é apagada depois que cada arquivo chega ao destino.</li>
+            <li>Cancelar é seguro: o arquivo em andamento permanece na origem.</li>
+            <li>
+              Arquivos com nome igual no destino são substituídos; a versão anterior fica em
+              <code>_cloud-migrator-backups/&lt;data&gt;</code> na raiz da conta de destino. Pastas iguais são mescladas.
+            </li>
+            <li>
+              Itens com nomes ambíguos ficam desabilitados: duplicados na mesma pasta (inclusive só por
+              maiúsculas/minúsculas), com <code>/</code> no nome, ou os reservados <code>.</code> e
+              <code>..</code>.
+            </li>
+            <li>
+              Docs, Sheets e Slides nativos do Google são exportados como arquivos do Microsoft Office ou SVG. Ao
+              voltar, são arquivos comuns, não documentos nativos do Google.
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h3>Contas e privacidade</h3>
+          <ul>
+            <li>O login abre no navegador e é feito pelo rclone. Sua senha não passa pelo app.</li>
+            <li>Os tokens ficam em uma configuração local do rclone nesta máquina, ou no servidor configurado.</li>
+            <li>No modo servidor, o app guarda apenas a URL e o token de acesso; as contas ficam no servidor.</li>
+            <li>Google Drive exige um cliente OAuth seu. OneDrive usa o cliente compartilhado do rclone.</li>
+            <li>No modo de teste do Google, a autorização pode expirar em cerca de 7 dias.</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Requisito</h3>
+          <p>
+            rclone instalado e disponível no local onde a transferência roda. A versão detectada aparece no topo da
+            janela.
+          </p>
+        </section>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn btn-secondary" type="button" data-close="help-dialog">Fechar</button>
+      </div>
+    </dialog>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
