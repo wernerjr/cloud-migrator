@@ -1,0 +1,59 @@
+{
+  "id": "",
+  "name": "Cloud Migrator",
+  "description": "Servidor de transferências do app Cloud Migrator (Google Drive ↔ OneDrive). É stateful: mantenha 1 réplica e use o volume /data para guardar as contas do rclone.",
+  "category": "tools",
+  "image": "",
+  "command": [],
+  "args": [],
+  "files": {},
+  "env": {},
+  "ports": [
+    {
+      "name": "port-8787",
+      "port": 8787,
+      "public": true,
+      "protocol": "tcp",
+      "primary": true
+    }
+  ],
+  "volumes": [
+    {
+      "name": "data",
+      "mount_path": "/data",
+      "size": "1Gi"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "CM_TOKEN",
+      "label": "Token de acesso do servidor",
+      "type": "generated_secret",
+      "required": true,
+      "secret": true
+    }
+  ],
+  "resources": {
+    "cpu_request": "100m",
+    "cpu_limit": "500m",
+    "memory_request": "128Mi",
+    "memory_limit": "512Mi"
+  },
+  "health_check": {
+    "path": "/api/health",
+    "port": 8787,
+    "initial_delay_seconds": 10,
+    "period_seconds": 30,
+    "timeout_seconds": 5,
+    "failure_threshold": 3,
+    "type": "http"
+  },
+  "source": {
+    "git_repo": "https://github.com/wernerjr/cloud-migrator.git",
+    "git_branch": "main",
+    "git_provider_id": "",
+    "build_type": "dockerfile",
+    "dockerfile": "Dockerfile.server",
+    "build_context": "."
+  }
+}

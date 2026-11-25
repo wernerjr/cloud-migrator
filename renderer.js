@@ -32,6 +32,7 @@ const state = {
 const ui = {
   modeButton: byId('mode-button'),
   modeLabel: byId('mode-label'),
+  modeIcon: byId('mode-icon'),
   modeDot: byId('mode-dot'),
   rcloneVersion: byId('rclone-version'),
   noticeBanner: byId('notice-banner'),
@@ -226,9 +227,17 @@ function anyAuth() {
   return PANE_KEYS.some((key) => Boolean(state.panes[key].auth));
 }
 
-function serverHost() {
+function serverAddress() {
   try {
     return new URL(state.server && state.server.url ? state.server.url : '').host;
+  } catch {
+    return state.server && state.server.url ? state.server.url : '';
+  }
+}
+
+function serverHost() {
+  try {
+    return new URL(state.server && state.server.url ? state.server.url : '').hostname;
   } catch {
     return state.server && state.server.url ? state.server.url : '';
   }
@@ -243,14 +252,22 @@ function runtimeLabel() {
 function renderMode() {
   const server = state.mode === 'server';
   ui.modeButton.classList.toggle('is-server', server);
+  ui.modeIcon.setAttribute('href', server ? '#i-server' : '#i-monitor');
   ui.modeLabel.textContent = runtimeLabel();
+  const ready = Boolean(
+    state.server && state.server.online && state.rclone && !state.statusError,
+  );
   ui.modeDot.hidden = !server;
-  ui.modeDot.classList.toggle('is-online', server && Boolean(state.server && state.server.online));
-  ui.modeDot.classList.toggle('is-offline', server && !(state.server && state.server.online));
+  ui.modeDot.classList.toggle('is-online', server && ready);
+  ui.modeDot.classList.toggle('is-offline', server && !ready);
   ui.modeButton.disabled = state.busy || anyAuth();
   ui.modeButton.title = server
-    ? `Servidor: ${(state.server && state.server.url) || 'não configurado'}`
-    : 'Transferências neste computador';
+    ? `Servidor: ${(state.server && state.server.url) || 'não configurado'} · clique para configurar`
+    : 'Transferências neste computador · clique para configurar';
+  ui.modeButton.setAttribute(
+    'aria-label',
+    `Configurar onde as transferências rodam. Atual: ${runtimeLabel()}`,
+  );
 }
 
 function renderRcloneMeta() {
@@ -307,10 +324,7 @@ function renderNotice() {
     }
   } else if (!state.server || !state.server.online) {
     title = 'Servidor indisponível';
-    parts = [
-      (state.server && state.server.error) || 'Não foi possível alcançar o servidor.',
-      ' Se uma transferência já estava rodando, ela segue no servidor.',
-    ];
+    parts = [(state.server && state.server.error) || 'Não foi possível alcançar o servidor.'];
     ui.noticeActions.append(
       retryNoticeButton(),
       actionButton('Configurar', 'btn-quiet', openSettingsDialog),
@@ -1054,10 +1068,10 @@ function openConfirm() {
       : '';
 
   ui.confirmRuntime.replaceChildren(
-    icon('server'),
+    icon(state.mode === 'server' ? 'server' : 'monitor'),
     document.createTextNode(
       state.mode === 'server'
-        ? `Executado no servidor ${serverHost() || ''}`
+        ? `Executado no servidor ${serverAddress() || ''}`.trim()
         : 'Executado neste computador',
     ),
   );
@@ -1423,9 +1437,14 @@ function handleProgress(payload) {
   if (payload.phase === 'connection') {
     if (!transfer.server) return;
     ui.dockSub.textContent = 'Sem conexão com o servidor · tentando novamente';
-    ui.liveStatus.textContent = 'Sem conexão com o servidor. A transferência continua nele.';
+    if (!transfer.connectionIssue) {
+      transfer.connectionIssue = true;
+      ui.liveStatus.textContent = 'Sem conexão com o servidor. A transferência continua nele.';
+    }
     return;
   }
+
+  transfer.connectionIssue = false;
 
   if (payload.phase === 'item') {
     transfer.itemIndex = payload.itemIndex || 1;

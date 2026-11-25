@@ -28,6 +28,11 @@
         <line x1="6" x2="6.01" y1="6" y2="6" />
         <line x1="6" x2="6.01" y1="18" y2="18" />
       </symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24">
+        <rect width="20" height="14" x="2" y="3" rx="2" />
+        <line x1="8" x2="16" y1="21" y2="21" />
+        <line x1="12" x2="12" y1="17" y2="21" />
+      </symbol>
       <symbol id="i-folder" viewBox="0 0 24 24">
         <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
       </symbol>
@@ -100,9 +105,10 @@
             class="mode-button"
             type="button"
             aria-label="Configurar onde as transferências rodam"
+            aria-haspopup="dialog"
             title="Onde as transferências rodam"
           >
-            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-server"></use></svg>
+            <svg class="icon" aria-hidden="true" focusable="false"><use id="mode-icon" href="#i-monitor"></use></svg>
             <span id="mode-label" class="mode-label">Neste computador</span>
             <span id="mode-dot" class="mode-dot" aria-hidden="true" hidden></span>
           </button>
@@ -435,6 +441,10 @@
             <li>A origem só é apagada depois que cada arquivo chega ao destino.</li>
             <li>Cancelar é seguro: o arquivo em andamento permanece na origem.</li>
             <li>
+              No modo servidor, a transferência continua no servidor se o app fechar ou perder a conexão; o resultado
+              aparece ao reabrir.
+            </li>
+            <li>
               Arquivos com nome igual no destino são substituídos; a versão anterior fica em
               <code>_cloud-migrator-backups/&lt;data&gt;</code> na raiz da conta de destino. Pastas iguais são mescladas.
             </li>
@@ -454,7 +464,10 @@
           <ul>
             <li>O login abre no navegador e é feito pelo rclone. Sua senha não passa pelo app.</li>
             <li>Os tokens ficam em uma configuração local do rclone nesta máquina, ou no servidor configurado.</li>
-            <li>No modo servidor, o app guarda apenas a URL e o token de acesso; as contas ficam no servidor.</li>
+            <li>
+              No modo servidor, o app guarda apenas a URL e o token de acesso; as contas ficam no servidor. Use o
+              indicador no topo para alternar entre este computador e o servidor.
+            </li>
             <li>Google Drive exige um cliente OAuth seu. OneDrive usa o cliente compartilhado do rclone.</li>
             <li>No modo de teste do Google, a autorização pode expirar em cerca de 7 dias.</li>
           </ul>

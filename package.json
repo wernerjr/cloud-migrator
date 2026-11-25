@@ -7,6 +7,8 @@
   "private": true,
   "scripts": {
     "start": "electron .",
+    "server": "node server.js",
+    "server:docker": "docker compose -f docker-compose.server.yml up -d --build",
     "test": "node --test test/*.test.js"
   },
   "devDependencies": {

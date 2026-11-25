@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Cloud Migrator** (357 symbols, 1411 relationships, 32 execution flows).
+This project is indexed by GitNexus as **cloud-migrator** (808 symbols, 2743 relationships, 72 execution flows).
 
 > Index stale? Run `node .gitnexus/run.cjs analyze --index-only` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? Bootstrap with `npx`, `bunx`, or `pnpm dlx` — e.g. `bunx gitnexus@latest analyze` (npm 11 npx crash; #1939).
 
@@ -25,10 +25,10 @@ This project is indexed by GitNexus as **Cloud Migrator** (357 symbols, 1411 rel
 
 | Resource | Use for |
 | --- | --- |
-| `gitnexus://repo/Cloud Migrator/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/Cloud Migrator/clusters` | All functional areas |
-| `gitnexus://repo/Cloud Migrator/processes` | All execution flows |
-| `gitnexus://repo/Cloud Migrator/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/cloud-migrator/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/cloud-migrator/clusters` | All functional areas |
+| `gitnexus://repo/cloud-migrator/processes` | All execution flows |
+| `gitnexus://repo/cloud-migrator/process/{name}` | Step-by-step execution trace |
 
 ## CLI
 

@@ -1,0 +1,19 @@
+services:
+  cloud-migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    image: cloud-migrator-server:local
+    container_name: cloud-migrator
+    restart: unless-stopped
+    ports:
+      - "${CM_PORT:-8787}:8787"
+    environment:
+      CM_TOKEN: ${CM_TOKEN:?defina CM_TOKEN com pelo menos 16 caracteres}
+      CM_PORT: "8787"
+      RCLONE_CONFIG: /data/rclone.conf
+    volumes:
+      - cloud-migrator-data:/data
+
+volumes:
+  cloud-migrator-data:

@@ -1,0 +1,13 @@
+node_modules
+.git
+.gitnexus
+.claude
+.claude*
+assets
+test
+dist
+.env
+*.md
+!README.md
+.DS_Store
+*.log
