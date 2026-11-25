@@ -1,7 +1,7 @@
 {
   "id": "",
   "name": "Cloud Migrator",
-  "description": "Servidor de transferências do app Cloud Migrator (Google Drive ↔ OneDrive). É stateful: mantenha 1 réplica e use o volume /data para guardar as contas do rclone.",
+  "description": "Servidor de transferências do app Cloud Migrator (Google Drive ↔ OneDrive). É stateful: mantenha 1 réplica e use o volume /data para guardar as contas do rclone. Quem usa CPU é o rclone da transferência; mais réplicas não dividem um mesmo trabalho.",
   "category": "tools",
   "image": "",
   "command": [],
@@ -34,8 +34,8 @@
     }
   ],
   "resources": {
-    "cpu_request": "100m",
-    "cpu_limit": "500m",
+    "cpu_request": "500m",
+    "cpu_limit": "2000m",
     "memory_request": "128Mi",
     "memory_limit": "512Mi"
   },

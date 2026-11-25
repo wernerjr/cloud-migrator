@@ -76,7 +76,9 @@ openssl rand -hex 32
 
 No Maris, publique a imagem (`docker build -f Dockerfile.server -t ... .` e envie para o registry ou use o Git como fonte), exponha a porta `8787`, monte um volume persistente em `/data` e defina `CM_TOKEN`. O endpoint de saúde para probes é `GET /api/health` (sem token). O entrypoint ajusta o dono de `/data` e roda o serviço como usuário `node` (uid 1000); se preferir um volume com `fsGroup: 1000`, também funciona.
 
-O serviço é **stateful**: use uma réplica só. A transferência em andamento e o login OAuth ficam na memória e na porta local do rclone; múltiplas réplicas quebrariam o acompanhamento e o callback. O volume `/data` guarda as contas entre reinícios.
+O serviço é **stateful**: use uma réplica só. A transferência em andamento e o login OAuth ficam na memória e na porta local do rclone; com mais réplicas o balanceador manda o próximo poll para outro pod, que responde 404, e o app aborta o acompanhamento. O volume `/data` guarda as contas entre reinícios.
+
+Quem consome CPU é o **rclone**, não o Node. Uma transferência é um processo rclone dentro de um pod só: aumentar réplicas não divide esse trabalho e não acelera nada. O que acelera é dar mais CPU ao pod. O limite de `500m` (meio núcleo) faz o rclone viver throttled; use pelo menos `2` núcleos de limite (`cpu_limit: "2000m"`) e mantenha `1` réplica. O total de CPU gasta para mover os mesmos bytes é parecido — menos throttling só faz terminar mais rápido.
 
 ### Template do Maris
 
@@ -88,7 +90,7 @@ O arquivo **`maris-template.json`** é um `TemplateDefinition` importável no Ma
 - volume `1Gi` em `/data`
 - um token `CM_TOKEN` gerado pelo Maris, mostrado uma vez no resultado do deploy
 
-No Maris, importe em **Templates → Import**, escolha o projeto e adicione um domínio HTTP com HTTPS para a porta 8787. Depois do deploy, copie o `CM_TOKEN` gerado, configure o app para usar a URL do domínio e esse token, e mantenha **1 réplica** porque o servidor é stateful.
+No Maris, importe em **Templates → Import**, escolha o projeto e adicione um domínio HTTP com HTTPS para a porta 8787. Depois do deploy, copie o `CM_TOKEN` gerado, configure o app para usar a URL do domínio e esse token, e mantenha **1 réplica** com limite de **2 vCPU** porque o servidor é stateful e a transferência roda em um rclone por pod.
 
 O build do Maris usa o repositório Git: faça commit e push do `Dockerfile.server`, do `docker-entrypoint.sh` e das mudanças atuais antes de importar. O template não usa uma imagem publicada; ele constrói a partir do `main`.
 
@@ -171,6 +173,7 @@ assets/                 ícones e IBM Plex (licença OFL em assets/fonts/OFL.txt
 ## Limitações conhecidas
 
 - Uma transferência por vez.
+- Sem escala horizontal: uma transferência roda em um pod só; mais réplicas não a dividem e quebram o acompanhamento.
 - Sem modo copiar, sincronização contínua, agendamento ou histórico de transferências.
 - Sem empacotamento do app para distribuição.
 - O modo servidor guarda a transferência em memória; reiniciar o servidor a interrompe.
